@@ -16,6 +16,7 @@ const DeployMultisig: React.FC<DeployMultisigProps> = ({
   const [canDeploy, setCanDeploy] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [status, setStatus] = useState<StatusTextProps>()
+  const [address, setAddress] = useState<string>('')
 
   useEffect(() => {
     if (!signer || !walletConfig) {
@@ -23,6 +24,7 @@ const DeployMultisig: React.FC<DeployMultisigProps> = ({
       return
     }
     createMultisig([signer], walletConfig).then(async wallet => {
+      setAddress(wallet?.address || '')
       setStatus(undefined)
       if (!wallet) {
         setCanDeploy(false)
@@ -69,10 +71,12 @@ const DeployMultisig: React.FC<DeployMultisigProps> = ({
     <div className="card">
       {canDeploy && (
         <button onClick={doDeploy} disabled={loading}>
-          Deploy wallet!
+          Deploy wallet{address ? ` to ${address}` : ''}!
         </button>
       )}
       <ErrorText status={status} />
+
+
     </div>
   )
 }
